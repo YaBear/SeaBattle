@@ -1,5 +1,5 @@
-#ifndef MAIN_H_
-#define MAIN_H_
+#ifndef SEABATTLE_H_
+#define SEABATTLE_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,4 +27,4 @@ int check_coord(board game_board, int pos_x, int pos_y);
 int check_line(board game_board, int pos_x, int pos_y, int len, int dir);
 void build_the_wall(board *game_board);
 
-#endif  // MAIN_H_
+#endif  // SEABATTLE_H_
