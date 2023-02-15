@@ -3,7 +3,9 @@
 int main () {
     board game_board = {0};
     printf ("\033[0d\033[2J");
-    create_army(game_board);
+    // create_army(game_board);
+    read_from_file(&game_board);
+    print_board(game_board);
     return 0;
 }
 

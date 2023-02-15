@@ -26,5 +26,7 @@ void create_one_ship(board *game_board, int pos_x, int pos_y);
 int check_coord(board game_board, int pos_x, int pos_y);
 int check_line(board game_board, int pos_x, int pos_y, int len, int dir);
 void build_the_wall(board *game_board);
+void save_to_file(board game_board);
+void read_from_file(board *game_board);
 
 #endif  // SEABATTLE_H_

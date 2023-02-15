@@ -40,7 +40,10 @@ void create_army(board game_board) {
         print_board(game_board);
         if (error)
             printf("Расстояние между кораблями должна быть минимум одна клетка.\n");
+        if (stage >= 11)
+            game_on = 0;
     }
+    save_to_file(game_board);
 }
 
 void create_four_ship(board *game_board, int pos_x, int pos_y) {
