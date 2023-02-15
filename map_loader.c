@@ -16,6 +16,7 @@ void read_from_file(board *game_board) {
                     game_board->board[i][j] = fgetc(fp) - 48;
                 }
             }
+            fclose(fp);
             stage = 0;
         }
     }
