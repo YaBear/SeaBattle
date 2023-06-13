@@ -1,11 +1,15 @@
 #include "seabattle.h"
 
 int main () {
-    board game_board = {0};
+    board player_board = {0};
+    board enemy_board = {0};
     printf ("\033[0d\033[2J");
     // create_army(game_board);
-    read_from_file(&game_board);
-    print_board(game_board);
+    read_from_file(&player_board, 0);
+    read_from_file(&enemy_board, 1);
+    // print_all_boards(player_board, enemy_board, 0);
+    // print_board(player_board);
+    draw_game_frame(&player_board, &enemy_board);
     return 0;
 }
 

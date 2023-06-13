@@ -24,7 +24,7 @@ void create_army(board game_board) {
         else {
             error = 0;
         if (!check_coord(game_board, pos_x, pos_y)) {
-        game_board.board[pos_y][pos_x] = 9;
+        game_board.info[pos_y][pos_x] = 9;
         printf("%dx %dy\n", pos_x, pos_y);
         if (stage == 1) create_four_ship(&game_board, pos_x, pos_y);
         if (stage == 2 || stage == 3) create_three_ship(&game_board, pos_x, pos_y);
@@ -71,19 +71,19 @@ void create_four_ship(board *game_board, int pos_x, int pos_y) {
     scanf("%d", &i);
         if (i == 1 && left) {
             for (int i = 0; i < 4; i++)
-                game_board->board[pos_y][pos_x-i] = 1;
+                game_board->info[pos_y][pos_x-i] = 1;
             stage = 0;
         } else if (i == 2 && right) {
             for (int i = 0; i < 4; i++)
-                game_board->board[pos_y][pos_x+i] = 1;
+                game_board->info[pos_y][pos_x+i] = 1;
             stage = 0;
         } else if (i == 3 && up) {
             for (int i = 0; i < 4; i++)
-                game_board->board[pos_y-i][pos_x] = 1;
+                game_board->info[pos_y-i][pos_x] = 1;
             stage = 0;
         } else if (i == 4 && down) {
             for (int i = 0; i < 4; i++)
-                game_board->board[pos_y+i][pos_x] = 1;
+                game_board->info[pos_y+i][pos_x] = 1;
             stage = 0;
         } else {
             printf("Корабль нельзя так расположить.\n");
@@ -117,19 +117,19 @@ void create_three_ship(board *game_board, int pos_x, int pos_y) {
     scanf("%d", &i);
         if (i == 1 && left) {
             for (int i = 0; i < 3; i++)
-                game_board->board[pos_y][pos_x-i] = 1;
+                game_board->info[pos_y][pos_x-i] = 1;
             stage = 0;
         } else if (i == 2 && right) {
             for (int i = 0; i < 3; i++)
-                game_board->board[pos_y][pos_x+i] = 1;
+                game_board->info[pos_y][pos_x+i] = 1;
             stage = 0;
         } else if (i == 3 && up) {
             for (int i = 0; i < 3; i++)
-                game_board->board[pos_y-i][pos_x] = 1;
+                game_board->info[pos_y-i][pos_x] = 1;
             stage = 0;
         } else if (i == 4 && down) {
             for (int i = 0; i < 3; i++)
-                game_board->board[pos_y+i][pos_x] = 1;
+                game_board->info[pos_y+i][pos_x] = 1;
             stage = 0;
         } else {
             printf("Корабль нельзя так расположить.\n");
@@ -162,19 +162,19 @@ void create_two_ship(board *game_board, int pos_x, int pos_y) {
     scanf("%d", &i);
         if (i == 1 && left) {
             for (int i = 0; i < 2; i++)
-                game_board->board[pos_y][pos_x-i] = 1;
+                game_board->info[pos_y][pos_x-i] = 1;
             stage = 0;
         } else if (i == 2 && right) {
             for (int i = 0; i < 2; i++)
-                game_board->board[pos_y][pos_x+i] = 1;
+                game_board->info[pos_y][pos_x+i] = 1;
             stage = 0;
         } else if (i == 3 && up) {
             for (int i = 0; i < 2; i++)
-                game_board->board[pos_y-i][pos_x] = 1;
+                game_board->info[pos_y-i][pos_x] = 1;
             stage = 0;
         } else if (i == 4 && down) {
             for (int i = 0; i < 2; i++)
-                game_board->board[pos_y+i][pos_x] = 1;
+                game_board->info[pos_y+i][pos_x] = 1;
             stage = 0;
         } else {
             printf("Корабль нельзя так расположить.\n");
@@ -185,5 +185,5 @@ void create_two_ship(board *game_board, int pos_x, int pos_y) {
 void create_one_ship(board *game_board, int pos_x, int pos_y) {
     printf ("\033[0d\033[2J");
     print_board(*game_board);
-    game_board->board[pos_y][pos_x] = 1;
+    game_board->info[pos_y][pos_x] = 1;
 }

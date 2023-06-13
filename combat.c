@@ -1,20 +1,34 @@
 #include "seabattle.h"
 
 // old player turn
-void draw_game_frame(board game_board) {
+void draw_game_frame(board *first_player, board *second_player) {
     char player_turn[3] = {0};
-    int game_on = 1;
+    int game_on = 1, result = 0;
     int pos_x = 0, pos_y = 0;
-    for (int i = 0; i < 24; i++) {
-        game_board.board[0][i] = 3;
-        game_board.board[i][0] = 3;
-        game_board.board[11][i] = 3;
-        game_board.board[i][11] = 3;
-        game_board.board[i][12] = 3;
-        game_board.board[i][23] = 3;
-    }
-    print_board(game_board);
+    // for (int i = 0; i < 24; i++) {
+    //     first_player->info[0][i] = 3;
+    //     first_player->info[i][0] = 3;
+    //     first_player->info[11][i] = 3;
+    //     first_player->info[i][11] = 3;
+    //     first_player->info[i][12] = 3;
+    //     first_player->info[i][23] = 3;
+    //     second_player->info[0][i] = 3;
+    //     second_player->info[i][0] = 3;
+    //     second_player->info[11][i] = 3;
+    //     second_player->info[i][11] = 3;
+    //     second_player->info[i][12] = 3;
+    //     second_player->info[i][23] = 3;
+    // }
+    // print_board(game_board);
+    print_all_boards(*first_player, *second_player, 0);
     while (game_on == 1) {
+        if (result == 1)
+            printf("Промах...\n");
+        else if (result == 2)
+            printf("Попадание!\n");
+        else if (result == 3)
+            printf("Уничтожен!\n");
+        result = 0;
         printf("Ваш ход: ");
         for (int i = 0; i < 2; i++) {
             scanf("%c", &player_turn[i]);
@@ -27,11 +41,17 @@ void draw_game_frame(board game_board) {
         if (pos_x > 10 || pos_y > 10)
             printf("Wrong coord\n");
         else {
-        printf("%dx %dy\n", pos_x, pos_y);
-        game_board.board[pos_x][pos_y] = 1;
+        // printf("%dx %dy\n", pos_x, pos_y);
+        if (second_player->info[pos_x][pos_y] == 1) {
+            second_player->info[pos_x][pos_y] = 2;
+            first_player->score += 1;
+            result = 2;
+        } else {
+            result = 1;
+        }
         }
         fseek(stdin,0,SEEK_END);
         printf ("\033[0d\033[2J");
-        print_board(game_board);
+        print_all_boards(*first_player, *second_player, 0);
     }
 }

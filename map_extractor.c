@@ -8,7 +8,7 @@ void save_to_file(board game_board) {
     fp = fopen(name, "w");
     for (int i = 0; i < 12; i++) {
         for (int j = 0; j < 12; j++) {
-            fprintf(fp, "%d", game_board.board[i][j]);
+            fprintf(fp, "%d", game_board.info[i][j]);
         }
     }
     fclose(fp);
