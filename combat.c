@@ -20,6 +20,8 @@ void draw_game_frame(board *first_player, board *second_player) {
     //     second_player->info[i][23] = 3;
     // }
     // print_board(game_board);
+    fseek(stdin,0,SEEK_END);
+    printf ("\033[0d\033[2J");
     print_all_boards(*first_player, *second_player, 0);
     while (game_on == 1) {
         if (result == 1)
@@ -28,6 +30,8 @@ void draw_game_frame(board *first_player, board *second_player) {
             printf("Попадание!\n");
         else if (result == 3)
             printf("Уничтожен!\n");
+        else if (result == 4)
+            printf("Невозможно выстрелить сюда!\n");
         result = 0;
         printf("Ваш ход: ");
         for (int i = 0; i < 2; i++) {
@@ -39,7 +43,7 @@ void draw_game_frame(board *first_player, board *second_player) {
         pos_y = abs(player_turn[0] - 64);
         pos_x = abs(player_turn[1] - 47);
         if (pos_x > 10 || pos_y > 10)
-            printf("Wrong coord\n");
+            result = 4;
         else {
         // printf("%dx %dy\n", pos_x, pos_y);
         if (second_player->info[pos_x][pos_y] == 1) {
@@ -47,6 +51,7 @@ void draw_game_frame(board *first_player, board *second_player) {
             first_player->score += 1;
             result = 2;
         } else {
+            second_player->info[pos_x][pos_y] = 9;
             result = 1;
         }
         }
