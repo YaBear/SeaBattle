@@ -7,7 +7,7 @@
 
 // Ship type = 0 - 1block, 1 - 2block, 2 - 3, 3 - 4
 typedef struct ships_struct {
-    int info[10][7];            // rows 10 - уникальные корабли: 1 - ID, 2 - Размер корабля, 3&6 - Координаты, 7 - Статус;
+    int info[10][6];            // rows 10 - уникальные корабли: 1 - ID, 2 - Размер корабля, 3-4 координаты носа, 5 направление, 6 статус
     int count;
 } ships;
 
@@ -16,12 +16,21 @@ typedef struct board_struct {
     int score;
 } board;
 
-typedef struct position {
-    int pos_x_start;
-    int pos_y_start;
-    int pos_x_end;
-    int pos_y_end;
-} positions;
+enum direction {
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN
+};
+
+enum ship_data {
+    ID,
+    SIZE,
+    X,
+    Y,
+    ROTATION,
+    STATUS
+};
 
 void draw_game_frame(board *first_player, board *second_player, ships *f_ships, ships *s_ships);
 void print_board(board game_board);
@@ -37,9 +46,10 @@ void build_the_wall(board *game_board);
 void save_to_file(board game_board, ships player_ships);
 void read_from_file(board *game_board, ships *player_ships, int player);
 void save_ship_information(ships *player_ships, int type, int pos_x, int pos_y, int rotation);
-void calculate_positions(int pos_x, int pos_y, int rotation, int type, positions *temp);
 void clearBuffer();
-int check_damage(ships *p_ships, int pos_x, int pos_y);
+int check_damage(board *p_board, ships *p_ships, int pos_x, int pos_y);
 int check_end(ships first, ships second);
+void full_destroy(board *p_board, ships *p_ships, int id);
+void eight_destroy(board *p_board, int x, int y);
 
 #endif  // SEABATTLE_H_

@@ -9,12 +9,14 @@ int main () {
     player_second_ships.count = 0;
     printf ("\033[0d\033[2J");
     printf("Создание поля для игрока 1\n");
+    // read_from_file(&player_first_board, &player_first_ships, 0);
     create_army(&player_first_board, &player_first_ships);
     printf ("\033[0d\033[2J");
     printf("Создание поля для игрока 2\n");
+    // read_from_file(&player_second_board, &player_second_ships, 0);
     create_army(&player_second_board, &player_second_ships);
     printf ("\033[0d\033[2J");
-    // read_from_file(&player_board, &player_ships, 0);
+
     // read_from_file(&enemy_board, 1);
     // print_all_boards(player_board, enemy_board, 0);
     // print_board(player_board);

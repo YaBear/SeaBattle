@@ -34,11 +34,13 @@ void draw_game_frame(board *first_player, board *second_player, ships *f_ships, 
             if (second_player->info[pos_x][pos_y] == 1) {
                 second_player->info[pos_x][pos_y] = 2;
                 first_player->score += 1;
-                if (check_damage(s_ships, pos_x, pos_y))
+                if (check_damage(second_player, s_ships, pos_y, pos_x)) {
                     result = 3;
-                else
+                } else
                     result = 2;
-            } else {
+            } else if (second_player->info[pos_x][pos_y] == 2 || second_player->info[pos_x][pos_y] == 3) {
+                result = 4;
+            } else if (second_player->info[pos_x][pos_y] == 0 || second_player->info[pos_x][pos_y] == 9) {
                 second_player->info[pos_x][pos_y] = 9;
                 result = 1;
                 turn = 1;
@@ -47,9 +49,9 @@ void draw_game_frame(board *first_player, board *second_player, ships *f_ships, 
             if (first_player->info[pos_x][pos_y] == 1) {
                 first_player->info[pos_x][pos_y] = 2;
                 second_player->score += 1;
-                if (check_damage(f_ships, pos_x, pos_y))
+                if (check_damage(first_player, f_ships, pos_y, pos_x)) {
                     result = 3;
-                else
+                } else
                     result = 2;
             } else {
                 first_player->info[pos_x][pos_y] = 9;
@@ -70,35 +72,73 @@ void draw_game_frame(board *first_player, board *second_player, ships *f_ships, 
         printf("Победил Игрок 2!!!\n");
 }
 
-int check_damage(ships *p_ships, int pos_x, int pos_y) {
-    int id = 69;
-    int destroyed = 0;
-    for (int i = 0; i < 10 && id == 69; i++) {
-        if (p_ships->info[i][2] == pos_x) {
-            if (p_ships->info[i][3] == pos_y) {
-                id = i;
-            }
-        if (p_ships->info[i][4] == pos_x) {
-            if (p_ships->info[i][5] == pos_y) {
-                id = i;
+int check_damage(board *p_board, ships *p_ships, int pos_x, int pos_y) {
+    int status = 0; // 0 damaged, 1 destroyed
+    // find ship id
+    int id = -1;
+    int check = 0;
+    printf("%d x, %d y\n", pos_x, pos_y);
+    for (int i = 0; i < 10 && check == 0; i++) {
+        for (int k = 0; k < p_ships->info[i][SIZE]; k++) {
+            if (p_ships->info[i][ROTATION] == LEFT) {
+                if (p_ships->info[i][X] - k == pos_x) {
+                    if (p_ships->info[i][Y] == pos_y)
+                        check = 1;
+                }
+            } else if (p_ships->info[i][ROTATION] == RIGHT) {
+                if (p_ships->info[i][X] + k == pos_x) {
+                    if (p_ships->info[i][Y] == pos_y)
+                        check = 1;
+                }
+            } else if (p_ships->info[i][ROTATION] == UP) {
+                if (p_ships->info[i][X] == pos_x) {
+                    if (p_ships->info[i][Y] - k == pos_y)
+                        check = 1;
+                }
+            } else if (p_ships->info[i][ROTATION] == DOWN) {
+                if (p_ships->info[i][X] == pos_x) {
+                    if (p_ships->info[i][Y] + k == pos_y)
+                        check = 1;
+                }
             }
         }
-        }
+        if (check)
+            id = i;
     }
-    if (id != 69) {
-        if (p_ships->info[id][6] == 2) {
-            p_ships->info[id][6] = 0;
-            destroyed = 1;
-        } else
-            p_ships->info[id][6] = 2;
+    // count damage
+    printf("%d STATUS\n", p_ships->info[id][STATUS]);
+    p_ships->info[id][STATUS] += 1;
+    printf("%d STATUS\n", p_ships->info[id][STATUS]);
+    printf("%d id, %d size\n", id, p_ships->info[id][SIZE]);
+    if (p_ships->info[id][STATUS] == p_ships->info[id][SIZE] + 1) {
+        status = 1;
+        printf("???\n");
+        full_destroy(p_board, p_ships, id);
     }
-    return destroyed;
+    return status;
+}
+
+void full_destroy(board *p_board, ships *p_ships, int id) {
+    int x = p_ships->info[id][X];
+    int y = p_ships->info[id][Y];
+    for (int i = 0; i < p_ships->info[id][SIZE]; i++) {
+        eight_destroy(p_board, x, y);
+        if (p_ships->info[id][ROTATION] == LEFT)
+            x -= 1;
+        else if (p_ships->info[id][ROTATION] == RIGHT)
+            x += 1;
+        else if (p_ships->info[id][ROTATION] == UP)
+            y -= 1;
+        else if (p_ships->info[id][ROTATION] == DOWN)
+            y += 1;
+    }
+    // p_board->score = p_board->score + 100;
 }
 
 int check_end(ships first, ships second) {
     int counter = 0;
     for (int i = 0; i < 10; i++) {
-        if (first.info[i][6] == 0)
+        if (first.info[i][STATUS] == first.info[i][SIZE] + 1)
             counter++;
     }
     if (counter == 9)
@@ -106,11 +146,30 @@ int check_end(ships first, ships second) {
     else {
         counter = 0;
         for (int i = 0; i < 10; i++) {
-            if (second.info[i][6] == 0)
+            if (second.info[i][STATUS] == second.info[i][SIZE] + 1)
                 counter++;
         }
         if (counter == 9)
             return 2;
     }
     return 1;
+}
+
+void eight_destroy(board *p_board, int x, int y) {
+    if (p_board->info[y - 1][x] == 0)
+        p_board->info[y - 1][x] = 9;
+    if (p_board->info[y - 1][x + 1] == 0)
+        p_board->info[y - 1][x + 1] = 9;
+    if (p_board->info[y][x + 1] == 0)
+        p_board->info[y][x + 1] = 9;
+    if (p_board->info[y + 1][x + 1] == 0)
+        p_board->info[y + 1][x + 1] = 9;
+    if (p_board->info[y + 1][x] == 0)
+        p_board->info[y + 1][x] = 9;
+    if (p_board->info[y + 1][x - 1] == 0)
+        p_board->info[y + 1][x - 1] = 9;
+    if (p_board->info[y][x - 1] == 0)
+        p_board->info[y][x - 1] = 9;
+    if (p_board->info[y - 1][x - 1] == 0)
+        p_board->info[y - 1][x - 1] = 9;
 }

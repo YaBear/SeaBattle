@@ -46,16 +46,15 @@ void create_army(board *game_board, ships *player_ships) {
         if (stage >= 11)
             game_on = 0;
     }
-    // for (int i = 0; i < 10; i++) {
-    //     printf("ID: %d, ",  player_ships->info[i][0]);
-    //     printf("Size: %d, ",  player_ships->info[i][1]);
-    //     printf("X_S: %d, ",  player_ships->info[i][2]);
-    //     printf("Y_S: %d, ",  player_ships->info[i][3]);
-    //     printf("X_E: %d, ",  player_ships->info[i][4]);
-    //     printf("Y_E: %d, ",  player_ships->info[i][5]);
-    //     printf("Status: %d", player_ships->info[i][6]);
-    //     printf("Ships: %d\n", player_ships->count);
-    // }
+    for (int i = 0; i < 10; i++) {
+        printf("ID: %d, ",  player_ships->info[i][0]);
+        printf("Size: %d, ",  player_ships->info[i][1]);
+        printf("X_S: %d, ",  player_ships->info[i][2]);
+        printf("Y_S: %d, ",  player_ships->info[i][3]);
+        printf("ROTATION: %d, ",  player_ships->info[i][4]);
+        printf("STATUS: %d, ",  player_ships->info[i][5]);
+        printf("Ships: %d\n", player_ships->count);
+    }
     // save_to_file(*game_board, *player_ships);
 }
 
@@ -226,40 +225,11 @@ void create_one_ship(board *game_board, ships *player_ships, int pos_x, int pos_
 }
 
 void save_ship_information(ships *player_ships, int type, int pos_x, int pos_y, int rotation) {
-    positions temp = {0};
-    calculate_positions(pos_x, pos_y, rotation, type, &temp);
-    player_ships->info[player_ships->count][0] = player_ships->count;
-    player_ships->info[player_ships->count][1] = type + 1;
-    player_ships->info[player_ships->count][2] = temp.pos_x_start;
-    player_ships->info[player_ships->count][3] = temp.pos_y_start;
-    player_ships->info[player_ships->count][4] = temp.pos_x_end;
-    player_ships->info[player_ships->count][5] = temp.pos_y_end;
-    player_ships->info[player_ships->count][6] = 1;
+    player_ships->info[player_ships->count][ID] = player_ships->count;
+    player_ships->info[player_ships->count][SIZE] = type + 1;
+    player_ships->info[player_ships->count][X] = pos_x;
+    player_ships->info[player_ships->count][Y] = pos_y;
+    player_ships->info[player_ships->count][ROTATION] = rotation;
+    player_ships->info[player_ships->count][STATUS] = 1;
     player_ships->count += 1;
-}
-
-void calculate_positions(int pos_x, int pos_y, int rotation, int type, positions *temp) {
-    pos_x--;
-    pos_y--;
-    if (rotation == 0) {
-        temp->pos_x_start = pos_x;
-        temp->pos_y_start = pos_y;
-        temp->pos_x_end = pos_x - type;
-        temp->pos_y_end = pos_y;
-    } else if (rotation == 1) {
-        temp->pos_x_start = pos_x;
-        temp->pos_y_start = pos_y;
-        temp->pos_x_end = pos_x + type;
-        temp->pos_y_end = pos_y;
-    } else if (rotation == 2) {
-        temp->pos_x_start = pos_x;
-        temp->pos_y_start = pos_y;
-        temp->pos_x_end = pos_x;
-        temp->pos_y_end = pos_y - type;
-    } else if (rotation == 3) {
-        temp->pos_x_start = pos_x;
-        temp->pos_y_start = pos_y;
-        temp->pos_x_end = pos_x;
-        temp->pos_y_end = pos_y + type;
-    }
 }
