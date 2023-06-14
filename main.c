@@ -28,7 +28,7 @@ int main () {
     //     printf("Status: %d", player_ships.info[i][6]);
     //     printf("Ships: %d\n", player_ships.count);
     // }
-    draw_game_frame(&player_first_board, &player_second_board);
+    draw_game_frame(&player_first_board, &player_second_board, &player_first_ships, &player_second_ships);
     return 0;
 }
 

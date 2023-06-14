@@ -23,7 +23,7 @@ typedef struct position {
     int pos_y_end;
 } positions;
 
-void draw_game_frame(board *first_player, board *second_player);
+void draw_game_frame(board *first_player, board *second_player, ships *f_ships, ships *s_ships);
 void print_board(board game_board);
 void print_all_boards(board first_player, board second_player, int mode);
 void create_army(board *game_board, ships *player_ships);
@@ -39,5 +39,7 @@ void read_from_file(board *game_board, ships *player_ships, int player);
 void save_ship_information(ships *player_ships, int type, int pos_x, int pos_y, int rotation);
 void calculate_positions(int pos_x, int pos_y, int rotation, int type, positions *temp);
 void clearBuffer();
+int check_damage(ships *p_ships, int pos_x, int pos_y);
+int check_end(ships first, ships second);
 
 #endif  // SEABATTLE_H_
