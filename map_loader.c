@@ -1,6 +1,6 @@
 #include "seabattle.h"
 
-void read_from_file(board *game_board, int player) {
+void read_from_file(board *game_board, ships *player_ships, int player) {
     FILE *fp = NULL;
     int stage = 1;
     char name[30] = "";
@@ -19,6 +19,13 @@ void read_from_file(board *game_board, int player) {
                     game_board->info[i][j] = fgetc(fp) - 48;
                 }
             }
+            fgetc(fp);
+            for (int i = 0; i < 10; i++) {
+                for (int k = 0; k < 7; k++) {
+                    player_ships->info[i][k] = fgetc(fp) - 48;
+                }
+            }
+            player_ships->count = 10;
             fclose(fp);
             stage = 0;
         }

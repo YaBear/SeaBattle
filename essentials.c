@@ -1,5 +1,12 @@
 #include "seabattle.h"
 
+void clearBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {
+        // Consume characters until newline or EOF is encountered
+    }
+}
+
 void print_board(board game_board) {
     printf("         Ваше поле              Поле противника  \n");
     printf("    A B C D E F G H I J       A B C D E F G H I J\n");
@@ -50,8 +57,12 @@ void print_all_boards(board first_player, board second_player, int mode) {
                     printf("9 ");
                 if (first_player.info[i][j] == 3)
                     printf("= ");
-                else if (first_player.info[i][j] == 1)
-                    printf("▲ ");
+                else if (first_player.info[i][j] == 1) {
+                    if (mode == 0 || mode == 1)
+                        printf("▲ ");
+                    else
+                        printf(". ");
+                }
                 else if (first_player.info[i][j] == 2)
                     printf("# ");
                 else if (first_player.info[i][j] == 0)
@@ -69,7 +80,7 @@ void print_all_boards(board first_player, board second_player, int mode) {
                 if (second_player.info[i][k] == 3)
                     printf("= ");
                 else if (second_player.info[i][k] == 1) {
-                    if (mode)
+                    if (mode == 1)
                         printf("▲ ");
                     else
                         printf(". ");
@@ -92,12 +103,18 @@ void print_all_boards(board first_player, board second_player, int mode) {
 }
 
 void build_the_wall(board *game_board) {
-    for (int i = 0; i < 24; i++) {
-        game_board->info[0][i] = 3;
-        game_board->info[i][0] = 3;
-        game_board->info[11][i] = 3;
-        game_board->info[i][11] = 3;
-        game_board->info[i][12] = 3;
-        game_board->info[i][23] = 3;
+    for (int i = 0; i < 12; i++) {
+        for (int k = 0; k < 24; k++) {
+            if (i == 0 || i == 11)
+                game_board->info[i][k] = 3;
+            if (i > 0 && i < 11 && (k == 0 || k == 11))
+                game_board->info[i][k] = 3;
+        }
+        // game_board->info[0][i] = 3;
+        // game_board->info[i][0] = 3;
+        // game_board->info[11][i] = 3;
+        // game_board->info[i][11] = 3;
+        // game_board->info[i][12] = 3;
+        // game_board->info[i][23] = 3;
     }
 }

@@ -1,11 +1,11 @@
 #include "seabattle.h"
 
-void create_army(board game_board, ships player_ships) {
+void create_army(board *game_board, ships *player_ships) {
     char player_turn[3] = {0};
     int game_on = 1;
     int pos_x = 0, pos_y = 0, stage = 1, error = 0;
-    build_the_wall(&game_board);
-    print_board(game_board);
+    build_the_wall(game_board);
+    print_board(*game_board);
     while (game_on == 1) {
         if (stage == 1) printf("Для начала выберите положение для корабля из 4ех клеток: ");
         if (stage == 2 || stage == 3) printf("Выберите положение для кораблей из 3ех клеток: ");
@@ -23,40 +23,44 @@ void create_army(board game_board, ships player_ships) {
             printf("Wrong coord\n");
         else {
             error = 0;
-        if (!check_coord(game_board, pos_x, pos_y)) {
-        game_board.info[pos_y][pos_x] = 9;
+        if (!check_coord(*game_board, pos_x, pos_y)) {
+        game_board->info[pos_y][pos_x] = 9;
         printf("%dx %dy\n", pos_x, pos_y);
-        if (stage == 1) create_four_ship(&game_board, &player_ships, pos_x, pos_y);
-        if (stage == 2 || stage == 3) create_three_ship(&game_board, &player_ships, pos_x, pos_y);
-        if (stage > 3 && stage < 7) create_two_ship(&game_board, &player_ships, pos_x, pos_y);
-        if (stage > 6 && stage < 11) create_one_ship(&game_board, &player_ships, pos_x, pos_y);
+        if (stage == 1) create_four_ship(game_board, player_ships, pos_x, pos_y);
+        if (stage == 2 || stage == 3) create_three_ship(game_board, player_ships, pos_x, pos_y);
+        if (stage > 3 && stage < 7) create_two_ship(game_board, player_ships, pos_x, pos_y);
+        if (stage > 6 && stage < 11) create_one_ship(game_board, player_ships, pos_x, pos_y);
         stage++;
         } else {
             error = 1;
         }
         }
+        clearBuffer();
+        player_turn[0] = '\0';
+        player_turn[1] = '\0';
         fseek(stdin,0,SEEK_END);
         printf ("\033[0d\033[2J");
-        print_board(game_board);
+        print_board(*game_board);
         if (error)
             printf("Расстояние между кораблями должна быть минимум одна клетка.\n");
         if (stage >= 11)
             game_on = 0;
     }
-    for (int i = 0; i < 10; i++) {
-        printf("ID: %d, ",  player_ships.info[i][0]);
-        printf("Size: %d, ",  player_ships.info[i][1] + 1);
-        printf("X_S: %d, ",  player_ships.info[i][2]);
-        printf("Y_S: %d, ",  player_ships.info[i][3]);
-        printf("X_E: %d, ",  player_ships.info[i][4]);
-        printf("Y_E: %d, ",  player_ships.info[i][5]);
-        printf("Status: %d\n", player_ships.info[i][6]);
-    }
-    save_to_file(game_board);
+    // for (int i = 0; i < 10; i++) {
+    //     printf("ID: %d, ",  player_ships->info[i][0]);
+    //     printf("Size: %d, ",  player_ships->info[i][1]);
+    //     printf("X_S: %d, ",  player_ships->info[i][2]);
+    //     printf("Y_S: %d, ",  player_ships->info[i][3]);
+    //     printf("X_E: %d, ",  player_ships->info[i][4]);
+    //     printf("Y_E: %d, ",  player_ships->info[i][5]);
+    //     printf("Status: %d", player_ships->info[i][6]);
+    //     printf("Ships: %d\n", player_ships->count);
+    // }
+    // save_to_file(*game_board, *player_ships);
 }
 
 void create_four_ship(board *game_board, ships *player_ships, int pos_x, int pos_y) {
-    int i = 0, stage = 1;
+    int i = 0, stage = 1, left = 0, right = 0, up = 0, down = 0;
     int rotation = 0; // 0 left 1 right 2 up 3 down
     printf ("\033[0d\033[2J");
     print_board(*game_board);
@@ -64,47 +68,52 @@ void create_four_ship(board *game_board, ships *player_ships, int pos_x, int pos
     printf("Выберите, куда будет направлен корабль:\n");
         if (pos_x - 4 >= 0) {
             printf("1) Влево\n");
-            rotation = 0;
+            left = 1;
         }
         if (pos_x + 4 < 12) {
             printf("2) Вправо\n");
-            rotation = 1;
+            right = 1;
         }
         if (pos_y - 4 > 0) {
             printf("3) Вверх\n");
-            rotation = 2;
+            up = 1;
         }
         if (pos_y + 4 < 12) {
             printf("4) Вниз\n");
-            rotation = 3;
+            down = 1;
         }
     scanf("%d", &i);
-        if (i == 1 && rotation == 0) {
+        if (i == 1 && left) {
             for (int i = 0; i < 4; i++)
                 game_board->info[pos_y][pos_x-i] = 1;
             stage = 0;
-        } else if (i == 2 && rotation == 1) {
+            rotation = 0;
+        } else if (i == 2 && right) {
             for (int i = 0; i < 4; i++)
                 game_board->info[pos_y][pos_x+i] = 1;
             stage = 0;
-        } else if (i == 3 && rotation == 2) {
+            rotation = 1;
+        } else if (i == 3 && up) {
             for (int i = 0; i < 4; i++)
                 game_board->info[pos_y-i][pos_x] = 1;
             stage = 0;
-        } else if (i == 4 && rotation == 3) {
+            rotation = 2;
+        } else if (i == 4 && down) {
             for (int i = 0; i < 4; i++)
                 game_board->info[pos_y+i][pos_x] = 1;
             stage = 0;
+            rotation = 3;
         } else {
             printf("Корабль нельзя так расположить.\n");
         }
+    // clearBuffer();
     fseek(stdin,0,SEEK_END);
     }
     save_ship_information(player_ships, 3, pos_x, pos_y, rotation);
 }
 
 void create_three_ship(board *game_board, ships *player_ships, int pos_x, int pos_y) {
-    int i = 0, stage = 1;
+    int i = 0, stage = 1, left = 0, right = 0, up = 0, down = 0;
     int rotation = 0; // 0 left 1 right 2 up 3 down
     printf ("\033[0d\033[2J");
     print_board(*game_board);
@@ -112,47 +121,52 @@ void create_three_ship(board *game_board, ships *player_ships, int pos_x, int po
         printf("Выберите, куда будет направлен корабль:\n");
         if (pos_x - 3 >= 0 && !check_line(*game_board, pos_x, pos_y, 2, 1)) {
             printf("1) Влево\n");
-            rotation = 0;
+            left = 1;
         }
         if (pos_x + 3 < 12 && !check_line(*game_board, pos_x, pos_y, 2, 2)) {
             printf("2) Вправо\n");
-            rotation = 1;
+            right = 1;
         }
         if (pos_y - 3 > 0 && !check_line(*game_board, pos_x, pos_y, 2, 3)) {
             printf("3) Вверх\n");
-            rotation = 2;
+            up = 1;
         }
         if (pos_y + 3 < 12 && !check_line(*game_board, pos_x, pos_y, 2, 4)) {
             printf("4) Вниз\n");
-            rotation = 3;
+            down = 1;
         }
     scanf("%d", &i);
-        if (i == 1 && rotation == 0) {
+        if (i == 1 && left) {
             for (int i = 0; i < 3; i++)
                 game_board->info[pos_y][pos_x-i] = 1;
             stage = 0;
-        } else if (i == 2 && rotation == 1) {
+            rotation = 0;
+        } else if (i == 2 && right) {
             for (int i = 0; i < 3; i++)
                 game_board->info[pos_y][pos_x+i] = 1;
             stage = 0;
-        } else if (i == 3 && rotation == 2) {
+            rotation = 1;
+        } else if (i == 3 && up) {
             for (int i = 0; i < 3; i++)
                 game_board->info[pos_y-i][pos_x] = 1;
             stage = 0;
-        } else if (i == 4 && rotation == 3) {
+            rotation = 2;
+        } else if (i == 4 && down) {
             for (int i = 0; i < 3; i++)
                 game_board->info[pos_y+i][pos_x] = 1;
             stage = 0;
+            rotation = 3;
         } else {
             printf("Корабль нельзя так расположить.\n");
         }
+    // clearBuffer();
     fseek(stdin,0,SEEK_END);
     }
     save_ship_information(player_ships, 2, pos_x, pos_y, rotation);
 }
 
 void create_two_ship(board *game_board, ships *player_ships, int pos_x, int pos_y) {
-    int i = 0, stage = 1;
+    int i = 0, stage = 1, left = 0, right = 0, up = 0, down = 0;
     int rotation = 0; // 0 left 1 right 2 up 3 down
     printf ("\033[0d\033[2J");
     print_board(*game_board);
@@ -160,40 +174,45 @@ void create_two_ship(board *game_board, ships *player_ships, int pos_x, int pos_
         printf("Выберите, куда будет направлен корабль:\n");
         if (pos_x - 2 >= 0 && !check_line(*game_board, pos_x, pos_y, 1, 1)) {
             printf("1) Влево\n");
-            rotation = 0;
+            left = 1;
         }
         if (pos_x + 2 < 12 && !check_line(*game_board, pos_x, pos_y, 1, 2)) {
             printf("2) Вправо\n");
-            rotation = 1;
+            right = 1;
         }
         if (pos_y - 2 > 0 && !check_line(*game_board, pos_x, pos_y, 1, 3)) {
             printf("3) Вверх\n");
-            rotation = 2;
+            up = 1;
         }
         if (pos_y + 2 < 12 && !check_line(*game_board, pos_x, pos_y, 1, 4)) {
             printf("4) Вниз\n");
-            rotation = 3;
+            down = 1;
         }
     scanf("%d", &i);
-        if (i == 1 && rotation == 0) {
+        if (i == 1 && left) {
             for (int i = 0; i < 2; i++)
                 game_board->info[pos_y][pos_x-i] = 1;
             stage = 0;
-        } else if (i == 2 && rotation == 1) {
+            rotation = 0;
+        } else if (i == 2 && right) {
             for (int i = 0; i < 2; i++)
                 game_board->info[pos_y][pos_x+i] = 1;
             stage = 0;
-        } else if (i == 3 && rotation == 2) {
+            rotation = 1;
+        } else if (i == 3 && up) {
             for (int i = 0; i < 2; i++)
                 game_board->info[pos_y-i][pos_x] = 1;
             stage = 0;
-        } else if (i == 4 && rotation == 3) {
+            rotation = 2;
+        } else if (i == 4 && down) {
             for (int i = 0; i < 2; i++)
                 game_board->info[pos_y+i][pos_x] = 1;
             stage = 0;
+            rotation = 3;
         } else {
             printf("Корабль нельзя так расположить.\n");
         }
+    // clearBuffer();
     fseek(stdin,0,SEEK_END);
     }
     save_ship_information(player_ships, 1, pos_x, pos_y, rotation);
@@ -208,23 +227,20 @@ void create_one_ship(board *game_board, ships *player_ships, int pos_x, int pos_
 
 void save_ship_information(ships *player_ships, int type, int pos_x, int pos_y, int rotation) {
     positions temp = {0};
-    printf("%d ????\n", player_ships->count);
     calculate_positions(pos_x, pos_y, rotation, type, &temp);
     player_ships->info[player_ships->count][0] = player_ships->count;
-    player_ships->info[player_ships->count][1] = type;
+    player_ships->info[player_ships->count][1] = type + 1;
     player_ships->info[player_ships->count][2] = temp.pos_x_start;
     player_ships->info[player_ships->count][3] = temp.pos_y_start;
     player_ships->info[player_ships->count][4] = temp.pos_x_end;
     player_ships->info[player_ships->count][5] = temp.pos_y_end;
     player_ships->info[player_ships->count][6] = 1;
-    for (int i = 0; i < 7; i++)
-        printf("%d ", player_ships->info[player_ships->count][i]);
-    printf("\n");
-    getchar();
-    player_ships->count = 1;
+    player_ships->count += 1;
 }
 
 void calculate_positions(int pos_x, int pos_y, int rotation, int type, positions *temp) {
+    pos_x--;
+    pos_y--;
     if (rotation == 0) {
         temp->pos_x_start = pos_x;
         temp->pos_y_start = pos_y;
@@ -243,7 +259,7 @@ void calculate_positions(int pos_x, int pos_y, int rotation, int type, positions
     } else if (rotation == 3) {
         temp->pos_x_start = pos_x;
         temp->pos_y_start = pos_y;
-        temp->pos_x_end = pos_x + type;
-        temp->pos_y_end = pos_y;
+        temp->pos_x_end = pos_x;
+        temp->pos_y_end = pos_y + type;
     }
 }
