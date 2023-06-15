@@ -118,3 +118,59 @@ void build_the_wall(board *game_board) {
         // game_board->info[i][23] = 3;
     }
 }
+
+int main_menu() {
+    int choise = 0;
+    int end = 0;
+    while (end != 1) {
+    printf ("\033[0d\033[2J");
+    printf("=== Sea Battle ===\n");
+    printf("= 1. Начать HotSeat сессию\n");
+    printf("= 2. Планировщик флота\n");
+    printf("= 3. Выход\n");
+    scanf("%d", &choise);
+    if (choise == 1 || choise == 2 || choise == 3)
+        end = 1;
+    clearBuffer();
+    }
+    return choise;
+}
+
+int hotseat_choise() {
+    int status = 0;
+    int end = 0;
+    while (end != 1) {
+        printf ("\033[0d\033[2J");
+        printf("=== Выберите режим создания флота ===\n");
+        printf("= 1. Вручную\n");
+        printf("= 2. Загрузить файл\n");
+        scanf("%d", &status);
+        if (status == 1 || status == 2)
+            end = 1;
+    }
+    return status;
+}
+
+void planer_start() {
+    int choise = 0;
+    int end = 0;
+    board b_temp = {0};
+    b_temp.score = 0;
+    ships s_temp = {0};
+    s_temp.count = 0;
+    while (end != 1) {
+        printf("=== Планировщик флота ===\n");
+        printf("= 1. Создать и сохранить флот в файл\n");
+        printf("= 2. Загрузить файл и просмотреть флот\n");
+        scanf("%d", &choise);
+        if (choise == 1) {
+            create_army(&b_temp, &s_temp, 1);
+            end = 1;
+        }
+        else if (choise == 2) {
+            read_from_file(&b_temp, &s_temp, 2);
+            print_board(b_temp);
+            end = 1;
+        }
+    }
+}

@@ -6,9 +6,11 @@ void read_from_file(board *game_board, ships *player_ships, int player) {
     char name[30] = "";
     while (stage == 1) {
         if (player == 0)
-            printf("Введите название файла для вашего поля: ");
+            printf("Введите название файла для поля Игрока 1: ");
+        else if (player == 1)
+            printf("Введите название файла для поля Игрока 2: ");
         else
-            printf("Введите название файла для поля противника: ");
+            printf("Введите название файла: ");
         scanf("%s", name);
         if ((fp = fopen(name, "r")) == NULL) {
             printf("Такого файла не существует.\n");
@@ -30,4 +32,5 @@ void read_from_file(board *game_board, ships *player_ships, int player) {
             stage = 0;
         }
     }
+    clearBuffer();
 }

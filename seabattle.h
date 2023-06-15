@@ -35,7 +35,7 @@ enum ship_data {
 void draw_game_frame(board *first_player, board *second_player, ships *f_ships, ships *s_ships);
 void print_board(board game_board);
 void print_all_boards(board first_player, board second_player, int mode);
-void create_army(board *game_board, ships *player_ships);
+void create_army(board *game_board, ships *player_ships, int mode);
 void create_four_ship(board *game_board, ships *player_ships, int pos_x, int pos_y);
 void create_three_ship(board *game_board, ships *player_ships, int pos_x, int pos_y);
 void create_two_ship(board *game_board, ships *player_ships, int pos_x, int pos_y);
@@ -51,5 +51,7 @@ int check_damage(board *p_board, ships *p_ships, int pos_x, int pos_y);
 int check_end(ships first, ships second);
 void full_destroy(board *p_board, ships *p_ships, int id);
 void eight_destroy(board *p_board, int x, int y);
-
+int main_menu();
+int hotseat_choise();
+void planer_start();
 #endif  // SEABATTLE_H_

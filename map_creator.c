@@ -1,6 +1,6 @@
 #include "seabattle.h"
 
-void create_army(board *game_board, ships *player_ships) {
+void create_army(board *game_board, ships *player_ships, int mode) {
     char player_turn[3] = {0};
     int game_on = 1;
     int pos_x = 0, pos_y = 0, stage = 1, error = 0;
@@ -25,7 +25,6 @@ void create_army(board *game_board, ships *player_ships) {
             error = 0;
         if (!check_coord(*game_board, pos_x, pos_y)) {
         game_board->info[pos_y][pos_x] = 9;
-        printf("%dx %dy\n", pos_x, pos_y);
         if (stage == 1) create_four_ship(game_board, player_ships, pos_x, pos_y);
         if (stage == 2 || stage == 3) create_three_ship(game_board, player_ships, pos_x, pos_y);
         if (stage > 3 && stage < 7) create_two_ship(game_board, player_ships, pos_x, pos_y);
@@ -46,16 +45,17 @@ void create_army(board *game_board, ships *player_ships) {
         if (stage >= 11)
             game_on = 0;
     }
-    for (int i = 0; i < 10; i++) {
-        printf("ID: %d, ",  player_ships->info[i][0]);
-        printf("Size: %d, ",  player_ships->info[i][1]);
-        printf("X_S: %d, ",  player_ships->info[i][2]);
-        printf("Y_S: %d, ",  player_ships->info[i][3]);
-        printf("ROTATION: %d, ",  player_ships->info[i][4]);
-        printf("STATUS: %d, ",  player_ships->info[i][5]);
-        printf("Ships: %d\n", player_ships->count);
-    }
-    // save_to_file(*game_board, *player_ships);
+    // for (int i = 0; i < 10; i++) {
+    //     printf("ID: %d, ",  player_ships->info[i][0]);
+    //     printf("Size: %d, ",  player_ships->info[i][1]);
+    //     printf("X_S: %d, ",  player_ships->info[i][2]);
+    //     printf("Y_S: %d, ",  player_ships->info[i][3]);
+    //     printf("ROTATION: %d, ",  player_ships->info[i][4]);
+    //     printf("STATUS: %d, ",  player_ships->info[i][5]);
+    //     printf("Ships: %d\n", player_ships->count);
+    // }
+    if (mode)
+        save_to_file(*game_board, *player_ships);
 }
 
 void create_four_ship(board *game_board, ships *player_ships, int pos_x, int pos_y) {
