@@ -58,7 +58,7 @@ void print_all_boards(board first_player, board second_player, int mode) {
                 if (first_player.info[i][j] == 3)
                     printf("= ");
                 else if (first_player.info[i][j] == 1) {
-                    if (mode == 0 || mode == 1)
+                    if (mode == 0 || mode == 1 || mode == 3)
                         printf("▲ ");
                     else
                         printf(". ");
@@ -80,7 +80,7 @@ void print_all_boards(board first_player, board second_player, int mode) {
                 if (second_player.info[i][k] == 3)
                     printf("= ");
                 else if (second_player.info[i][k] == 1) {
-                    if (mode == 1)
+                    if (mode == 1 || mode == 3)
                         printf("▲ ");
                     else
                         printf(". ");

@@ -66,6 +66,8 @@ void draw_game_frame(board *first_player, board *second_player, ships *f_ships, 
         print_all_boards(*first_player, *second_player, 2);
         game_on = check_end(*f_ships, *s_ships);
     }
+    printf ("\033[0d\033[2J");
+    print_all_boards(*first_player, *second_player, 3);
     if (game_on == 0)
         printf("Победил Игрок 2!!!\n");
     else
