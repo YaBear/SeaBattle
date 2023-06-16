@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 // Ship type = 0 - 1block, 1 - 2block, 2 - 3, 3 - 4
 typedef struct ships_struct {

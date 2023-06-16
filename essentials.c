@@ -170,6 +170,9 @@ void planer_start() {
         else if (choise == 2) {
             read_from_file(&b_temp, &s_temp, 2);
             print_board(b_temp);
+            for (int i = 0; i < 10; i++) {
+                printf("ID: %d, SIZE: %d, X: %d, Y: %d, ROTATION: %d, STATUS: %d\n", s_temp.info[i][ID], s_temp.info[i][SIZE], s_temp.info[i][X], s_temp.info[i][Y], s_temp.info[i][ROTATION], s_temp.info[i][STATUS]);
+            }
             end = 1;
         }
     }

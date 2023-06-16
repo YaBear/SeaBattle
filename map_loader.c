@@ -16,21 +16,36 @@ void read_from_file(board *game_board, ships *player_ships, int player) {
             printf("Такого файла не существует.\n");
             fseek(stdin,0,SEEK_END);
         } else {
-            for (int i = 0; i < 12; i++) {
-                for (int j = 0; j < 12; j++) {
-                    game_board->info[i][j] = fgetc(fp) - 48;
-                }
-            }
-            fgetc(fp);
-            for (int i = 0; i < 10; i++) {
-                for (int k = 0; k < 7; k++) {
-                    player_ships->info[i][k] = fgetc(fp) - 48;
-                }
-            }
-            player_ships->count = 10;
-            fclose(fp);
             stage = 0;
         }
     }
+    int line_count = 0;
+    char *number = NULL;
+    int x = 1;
+    char *line = NULL;
+    size_t len = 40;
+    while(getline(&line, &len, fp) != EOF) {
+        if (line_count < 12) {
+            number = strtok(line, " ");
+            game_board->info[line_count][0] = atoi(number);
+        } else if (line_count > 12) {
+            number = strtok(line, " ");
+            player_ships->info[line_count - 13][0] = atoi(number);
+        }
+        while (number != NULL) {
+            number = strtok(NULL, " ");
+            if (line_count < 12 && number != NULL) {
+                game_board->info[line_count][x] = atoi(number);
+                x++;
+            }
+            if (line_count > 12 && number != NULL) {
+                player_ships->info[line_count - 13][x] = atoi(number);
+                x++;
+            }
+        }
+        line_count++;
+        x = 1;
+    }
+    fclose(fp);
     clearBuffer();
 }
